@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<base href="./" >
+<meta charset="utf-8">
+<link rel="icon" href="./favicon.ico">
+</head>
+<body>
+<p id='msg'></p>
+<button onclick="doit();">doit</button>
+<script>
+// <!--
+getInfoSW = async function() {
+	try {
+		let controller = new AbortController();
+		let signal = controller.signal;
+		let tim = setTimeout(() => { controller.abort(); }, 300000);
+		const resp = await fetch("http://localhost/tsw/$infoSW", {signal});
+		if (tim) clearTimeout(tim);
+		if (resp && resp.ok)
+			return await resp.json();
+		else
+			return "";
+	} catch(err) {
+		return "";
+	}
+}
+
+doit = async function() {
+	if (navigator.serviceWorker.controller) {
+		let info = await getInfoSW();
+		if (info) {
+			swb = info.inb + "." + info.uib[0];
+			let json = JSON.parse(decodeURI(window.location.search.substring(1)));
+			json.n++;
+			document.getElementById("msg").innerText = json.msg + " (" + json.n + ")";
+			if (json.b == swb)
+				window.location = json.url;
+			else {
+				const encoder = new TextEncoder("utf-8");
+				let txt = t1 + "json = " + JSON.stringify(json) + ";\n" + t2 + t3;
+				// console.log(txt);
+				window.location = URL.createObjectURL(new Blob([encoder.encode(txt)], {type : 'text/html'}));
+			}
+		}
+	}
+}
+
+const t1 = "<!doctype html><html><head><meta charset='utf-8'></head><body><p id='msg'></p>\n<script>\n";
+const t2 = "document.getElementById('msg').innerText = json.msg + ' ' + json.b + ' (' + json.n + ')';\n";
+const t3 = "setTimeout(function(){ window.location = json.u2 + '?' + encodeURI(JSON.stringify(json));}, 2000);\n</script>\n</body></html>";
+
+doit();
+// -->
+</script>
+</body>
+</html>

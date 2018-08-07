@@ -69,6 +69,7 @@ const nf404 = function(m, u) {
 	let txt = encoder.encode(m + " : " + u);
 	const headers = new Headers();
 	headers.append("Content-Type", "text/plain; charset=utf-8");
+	headers.append("Cache-control", "no-store");
 	headers.append("Content-Length", "" + txt.length);
 	return new Response(txt, {status:404, statusText:"Not Found", headers:headers});
 }
@@ -77,6 +78,7 @@ const infoSW = function() {
 	let txt = encoder.encode(JSON.stringify({inb:inb, uib:uib}));
 	const headers = new Headers();
 	headers.append("Content-Type", "text/plain");
+	headers.append("Cache-control", "no-store");
 	headers.append("Content-Length", "" + txt.length);
 	return new Response(txt, {status:200, statusText:"OK", headers:headers});
 }
@@ -158,6 +160,7 @@ const fetchHome = async function(urlHome, build, toCache, timeout){
 			let txt = encoder.encode(deb + base + fin);
 			const headers = new Headers();
 			headers.append("Content-Type", "text/html");
+			headers.append("Cache-control", "no-store");
 			headers.append("Content-Length", "" + txt.length);
 			return new Response(txt, {status:200, statusText:"OK", headers:headers});
 		}

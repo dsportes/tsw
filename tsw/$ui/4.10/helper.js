@@ -17,13 +17,14 @@ register = function() {
 }
 
 reload = function(b, msg) {	
-	const t1 = "<!doctype html><html><head><meta charset='utf-8'></head><body><p id='msg'></p>\n<script>\n";
-	const t2 = "document.getElementById('msg').innerText = json.msg + ' ' + json.b + ' (' + json.n + ')';\n";
-	const t3 = "setTimeout(function(){ window.location = json.u2 + '?' + encodeURI(JSON.stringify(json));}, 2000);\n</script>\n</body></html>";
+	const t1 = 	"<!doctype html><html><head><meta charset='utf-8'></head><body><p id='msg' style='font-size:16px'></p>\n<script>\njson = ";
+	const t2 = 	";\nlet x = ''; let c = String.fromCharCode(9203); for(let i = 0; i < json.n; i++) x += c;" +
+	"document.getElementById('msg').innerText = json.msg + ' ' + json.b + ' ' + x;\n" +
+	"setTimeout(function(){ window.location = json.u2 + '?' + encodeURI(JSON.stringify(json));}, 2000);\n</script>\n</body></html>";
 	const encoder = new TextEncoder("utf-8");
 	let u = "" + window.location;
 	json = {url:u, b:b, msg:msg, u2:window.location.origin + "/tsw/$sw.html", n:1};
-	let txt = t1 + "json = " + JSON.stringify(json) + ";\n" + t2 + t3;
+	let txt = t1 + JSON.stringify(json) + t2 ;
 	// console.log(txt);
 	window.location = URL.createObjectURL(new Blob([encoder.encode(txt)], {type : 'text/html'}));
 }

@@ -1,12 +1,7 @@
 const shortcuts = {"?": "prod-index", "index2": "prod-index2", "index": "prod-index", "d": "demo-index", "admin": "prod-index2"};
-const inb = 4
-const uib = [11]
-const cp = "tsw";
-const CP = cp ? "/" + cp + "/" : "/";
-const CPOP = CP + "$op/";
-const CPUI = CP + "$ui/";
-const BOF = inb + "." + uib[0];
-const x = CPUI + BOF +"/";
+const inb = 4; 
+const uib = [11] ;
+const cp = "tsw"; const CP = cp ? "/" + cp + "/" : "/"; const CPOP = CP + "$op/"; const CPUI = CP + "$ui/"; const BC = inb + "." + uib[0]; const x = CPUI + BC +"/";
 const lres = [
 	x + "helper.js",
 	x + "home.html",
@@ -15,7 +10,7 @@ const lres = [
 
 // suite du script
 
-const CACHENAME =  (cp ? cp : "root") + "_" + BOF;	
+const CACHENAME =  (cp ? cp : "root") + "_" + BC;	
 const TRACEON = true;	// trace sur erreurs
 const TRACEON2 = true; // trace sur actions normales
 const VCACHES = { }
@@ -28,19 +23,19 @@ for(let i = 0, b = 0; b = uib[i]; i++) {
 	BUILDS[inb + "." + b] = true;
 }
 
-// installation des ressources requises pour la build BOF
+// installation des ressources requises pour la build BC
 this.addEventListener('install', function(event) {
-	if (TRACEON) console.log("Install de " + BOF);
+	if (TRACEON) console.log("Install de " + BC);
 	event.waitUntil(
 		caches.open(CACHENAME)
 		.then(cache => {
-			if (TRACEON2) console.log("Install addAll demandé ... " + BOF + "\n" + lres.join("\n"));
+			if (TRACEON2) console.log("Install addAll demandé ... " + BC + "\n" + lres.join("\n"));
 			const res = cache.addAll(lres);
-			if (TRACEON2) console.log("Install addAll OK " + BOF);
+			if (TRACEON2) console.log("Install addAll OK " + BC);
 			return res;
 		}).catch(error => {
 			// Une des URLs citées est NOT FOUND, on ne sait pas laquelle
-			if (TRACEON) console.log("Install addAll KO " + BOF + " - " + error.message);
+			if (TRACEON) console.log("Install addAll KO " + BC + " - " + error.message);
 		})
 	);
 });
@@ -50,7 +45,7 @@ this.addEventListener('activate', function(event) {
 	event.waitUntil(
 		caches.keys()
 		.then(cacheNames => {
-				if (TRACEON) console.log("Suppression des caches obsolètes sur activation de " + BOF);
+				if (TRACEON) console.log("Suppression des caches obsolètes sur activation de " + BC);
 				return Promise.all(
 					cacheNames.map(cacheName => {
 						if (!VCACHES[cacheName]) {
@@ -60,7 +55,7 @@ this.addEventListener('activate', function(event) {
 					})
 				);
 		}).catch(error => {
-			if (TRACEON) console.log("ERREUR sur suppression des caches obsolètes sur activation de " + BOF + " - " + error.message);
+			if (TRACEON) console.log("ERREUR sur suppression des caches obsolètes sur activation de " + BC + " - " + error.message);
 		})
 	);
 });
@@ -203,7 +198,7 @@ this.addEventListener('fetch', event => {
 		let p = path.substring(CPUI.length);
 		let i = p.indexOf("/");
 		let b = i != -1 ? p.substring(0, i) : "";
-		event.respondWith(fetchFromCaches(event.request, b != BOF ? b : null));
+		event.respondWith(fetchFromCaches(event.request, b != BC ? b : null));
 		return;
 	}
 
@@ -232,9 +227,9 @@ this.addEventListener('fetch', event => {
 			}
 		} else {
 			// build NON requise et non servie par le script actuel : routée au serveur
-			// cherche en cache de BOF, si absente 404
-			let urlHome = site + CPUI + BOF + "/" + h.home + ".html";
-			event.respondWith(fetchHome(urlHome, BOF, false, TIME_OUT_MS));
+			// cherche en cache de BC, si absente 404
+			let urlHome = site + CPUI + BC + "/" + h.home + ".html";
+			event.respondWith(fetchHome(urlHome, BC, false, TIME_OUT_MS));
 			return;								
 		}		
 	}
